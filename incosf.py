@@ -1,0 +1,19 @@
+#coding=utf-8
+import pymysql
+import csv
+
+connect = pymysql.connect(host="192.168.1.11",user="root",passwd="haplox2017",db="mutation",port=3306,charset="utf8") #host为服务器地址，db为数据库名，port为接口
+#left = ['KMT2A', 'KMT2A', 'KMT2A', 'KMT2A', 'KMT2A', 'KMT2A', 'KMT2A', 'KMT2A', 'KMT2A', 'KMT2A', 'KMT2A', 'KMT2A', 'KMT2A', 'KMT2A', 'KMT2A', 'KMT2A', 'KMT2A', 'KMT2A', 'KMT2A', 'KMT2A', 'KMT2A', 'KMT2A', 'KMT2A', 'KMT2A', 'KMT2A', 'KMT2A', 'KMT2A', 'KMT2A', 'KMT2A', 'KMT2A', 'KMT2A', 'KMT2A', 'KMT2A', 'KMT2A', 'KMT2A', 'KMT2A', 'KMT2A', 'KMT2A', 'KMT2A', 'KMT2A', 'KMT2A', 'KMT2A', 'KMT2A', 'KMT2A', 'KMT2A', 'KMT2A', 'KMT2A', 'KMT2A', 'KMT2A', 'KMT2A', 'KMT2A', 'KMT2A', 'PAX7', 'LMNA', 'TFG', 'TP53', 'TPM3', 'CCDC6', 'ERC1', 'GOLGA5', 'HOOK3', 'KIF5B', 'KTN1', 'NCOA4', 'PCM1', 'PRKAR1A', 'TRIM24', 'TRIM27', 'TRIM33', 'ETV6', 'ETV6', 'ETV6', 'ETV6', 'ETV6', 'ETV6', 'MN1', 'NAB2', 'EWSR1', 'FUS', 'BRD3', 'BRD4', 'FUS', 'FUS', 'FUS', 'FUS', 'FUS', 'FUS', 'PML', 'SS18', 'SS18', 'SS18', 'SS18L1', 'DNAJB1', 'PAX8', 'PAX3', 'PAX3', 'PAX3', 'ATIC', 'C2orf44', 'CARS', 'CLTC', 'DCTN1', 'EML4', 'FN1', 'HIP1', 'KIF5B', 'KLC1', 'MSN', 'NPM1', 'PPFIBP1', 'RANBP2', 'SEC31A', 'SQSTM1', 'STRN', 'TFG', 'TPM3', 'TPM4', 'VCL', 'TMPRSS2', 'TMPRSS2', 'TMPRSS2', 'TMPRSS2', 'EWSR1', 'EWSR1', 'EWSR1', 'EWSR1', 'EWSR1', 'EWSR1', 'EWSR1', 'EWSR1', 'EWSR1', 'EWSR1', 'EWSR1', 'EWSR1', 'EWSR1', 'EWSR1', 'EWSR1', 'EWSR1', 'EWSR1', 'EWSR1', 'EWSR1', 'EWSR1', 'COL1A1', 'FGFR3', 'FGFR3', 'CD74', 'CLIP1', 'ERC1', 'EZR', 'GOPC', 'HLA', 'KIAA1598', 'LRIG3', 'MYO5A', 'PPFIBP1', 'PWWP2A', 'SDC4', 'SLC34A2', 'TPM3', 'TPM3', 'ZCCHC8', 'AGTRAP', 'AKAP9', 'CEP89', 'CLCN6', 'FAM131B', 'FCHSD1', 'GATM', 'GNAI1', 'HERPUD1', 'KIAA1549', 'LSM14A', 'MKRN1', 'RNF130', 'SLC45A3', 'SND1', 'ZSCAN30', 'CD74', 'EWSR1', 'TAF15', 'TCF12', 'TFG', 'NACC2', 'QKI', 'ASPSCR1', 'CLTC', 'NONO', 'PRCC', 'SFPQ']
+#right = ['ABI1', 'ABI2', 'ACTN4', 'AFF1', 'AFF3', 'AFF4', 'ARHGAP26', 'ARHGEF12', 'BTBD18', 'CASC5', 'CASP8AP2', 'CBL', 'CREBBP', 'CT45A2', 'DAB2IP', 'EEFSEC', 'ELL', 'EP300', 'EPS15', 'FOXO3', 'FOXO4', 'FRYL', 'GAS7', 'GMPS', 'GPHN', 'KIAA0284', 'KIAA1524', 'LASP1', 'LPP', 'MAPRE1', 'MLLT1', 'MLLT10', 'MLLT11', 'MLLT3', 'MLLT4', 'MLLT6', 'MYO1F', 'NCKIPSD', 'NRIP3', 'PDS5A', 'PICALM', 'PRRC1', 'SARNP', 'SEPT2', 'SEPT5', 'SEPT6', 'SEPT9', 'SH3GL1', 'SORBS2', 'TET1', 'TOP3A', 'ZFYVE19', 'FOXO1', 'NTRK1', 'NTRK1', 'NTRK1', 'NTRK1', 'RET', 'RET', 'RET', 'RET', 'RET', 'RET', 'RET', 'RET', 'RET', 'RET', 'RET', 'RET', 'ABL1', 'ITPR2', 'JAK2', 'NTRK3', 'PDGFRB', 'RUNX1', 'ETV6', 'STAT6', 'DDIT3', 'DDIT3', 'NUTM1', 'NUTM1', 'ATF1', 'CREB3L1', 'CREB3L2', 'DDIT3', 'ERG', 'FEV', 'RARA', 'SSX1', 'SSX2', 'SSX4', 'SSX1', 'PRKACA', 'PPARG', 'FOXO1', 'NCOA1', 'NCOA2', 'ALK', 'ALK', 'ALK', 'ALK', 'ALK', 'ALK', 'ALK', 'ALK', 'ALK', 'ALK', 'ALK', 'ALK', 'ALK', 'ALK', 'ALK', 'ALK', 'ALK', 'ALK', 'ALK', 'ALK', 'ALK', 'ERG', 'ETV1', 'ETV4', 'ETV5', 'ATF1', 'CREB1', 'DDIT3', 'ERG', 'ETV1', 'ETV4', 'FEV', 'FLI1', 'NFATC1', 'NFATC2', 'NR4A3', 'PATZ1', 'PBX1', 'POU5F1', 'SMARCA5', 'SP3', 'WT1', 'YY1', 'ZNF384', 'ZNF444', 'PDGFB', 'BAIAP2L1', 'TACC3', 'ROS1', 'ROS1', 'ROS1', 'ROS1', 'ROS1', 'A', 'ROS1', 'ROS1', 'ROS1', 'ROS1', 'ROS1', 'ROS1', 'ROS1', 'ROS1', 'ROS1', 'ROS1', 'BRAF', 'BRAF', 'BRAF', 'BRAF', 'BRAF', 'BRAF', 'BRAF', 'BRAF', 'BRAF', 'BRAF', 'BRAF', 'BRAF', 'BRAF', 'BRAF', 'BRAF', 'BRAF', 'NRG1', 'NR4A3', 'NR4A3', 'NR4A3', 'NR4A3', 'NTRK2', 'NTRK2', 'TFE3', 'TFE3', 'TFE3', 'TFE3', 'TFE3']
+left = ['NRG1','NRG1','NRG1','NRG1','NRG1','NRG1','NRG1','NRG1','NRG1','NRG1','NRG1','NRG1']
+right = ['CD74','SDC4','SLC3A2','TNC','MDK','ATP1B1','DIP2B','RBPMS','MRPL13','ROCK1','DPYSL2','PARP8']
+
+for i in range(len(left)):
+    cursor = connect.cursor()
+    data = (left[i],right[i])
+    sql = "INSERT INTO oncokb (left_gene,right_gene) VALUES  ('%s','%s')"        
+    print(data)
+    cursor.execute(sql % data)
+    connect.commit()
+    cursor.close()
+connect.close() 

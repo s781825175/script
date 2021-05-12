@@ -1,0 +1,145 @@
+{
+    "emergency": true,
+    "name": "get_repaq_fq_bamQC_IDT",
+    "parameters": {
+        "Conditions": {
+            "schedule": ""
+        },
+        "Inputs": {
+            "loaddata_node_3": {
+                "alias": "load_ref",
+                "category": "loaddata",
+                "data": [
+                    {
+                        "enid": null,
+                        "name": "<$ref>",
+                        "property": {
+                            "block_file": {
+                                "block_name": null,
+                                "is_block": false,
+                                "split_format": "default"
+                            }
+                        }
+                    }
+                ],
+                "formats": [],
+                "maxitems": 1,
+                "minitems": 1,
+                "required": true,
+                "type": "file"
+            },
+            "loaddata_node_4": {
+                "alias": "load_bed",
+                "category": "loaddata",
+                "data": [
+                    {
+                        "enid": null,
+                        "name": "<$bed>",
+                        "property": {
+                            "block_file": {
+                                "block_name": null,
+                                "is_block": false,
+                                "split_format": "default"
+                            }
+                        }
+                    }
+                ],
+                "formats": [],
+                "maxitems": 1,
+                "minitems": 1,
+                "required": true,
+                "type": "file"
+            },
+            "loaddata_node_cfdna_rfq_xz": {
+                "alias": "rfq_xz",
+                "category": "loaddata",
+                "data": [
+                    {
+                        "enid": null,
+                        "name": "<$rfq>",
+                        "property": {
+                            "block_file": {
+                                "block_name": null,
+                                "is_block": false,
+                                "split_format": "default"
+                            }
+                        }
+                    }
+                ],
+                "formats": [],
+                "maxitems": 1,
+                "minitems": 1,
+                "required": true,
+                "type": "file"
+            },
+            "loaddata_node_primary_bed": {
+                "alias": "primary_bed",
+                "category": "loaddata",
+                "data": [
+                    {
+                        "enid": null,
+                        "name": "<$primary_bed>",
+                        "property": {
+                            "block_file": {
+                                "block_name": null,
+                                "is_block": false,
+                                "split_format": "default"
+                            }
+                        }
+                    }
+                ],
+                "formats": [],
+                "maxitems": 1,
+                "minitems": 1,
+                "required": true,
+                "type": "file"
+            }
+        },
+        "Outputs": {},
+        "Parameters": {
+            "rgbam_captureByBase_depth_maprate_node_5": {
+                "alias": "rgbam_captureByBase_depth_maprate",
+                "parameters": {
+                    "data_id": {
+                        "hint": "",
+                        "required": true,
+                        "type": "string",
+                        "value": "<$data_id>",
+                        "variable": true
+                    }
+                }
+            },
+            "sentieon-bwa-gencore-pileup-no-umi_node_5": {
+                "alias": "sentieon-bwa-gencore-pileup-no-umi",
+                "parameters": {
+                    "sample": {
+                        "hint": "sample_name_prefix",
+                        "required": true,
+                        "type": "string",
+                        "value": "sample",
+                        "variable": true
+                    }
+                }
+            }
+        },
+        "Property": {
+            "CDN": {
+                "required": true
+            },
+            "reference_task": [
+                {
+                    "id": null
+                }
+            ],
+            "water_mark": {
+                "required": true,
+                "style": null
+            }
+        },
+        "description": "",
+        "name": "get_repaq_fq_bamQC_IDT_<$sample>"
+    },
+    "task_name": "get_repaq_fq_bamQC_IDT_<$sample>",
+    "workflow_name": "get_repaq_fq_bamQC_IDT",
+    "workflow_version": 1
+}
