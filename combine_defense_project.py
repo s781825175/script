@@ -5,7 +5,6 @@ import subprocess
 import os
 
 #curl 192.168.1.10/api/report/sample-csv?gdna_data_id=
-#before_file = "sample-54332.csv"
 
 def combine_info():
     id_list = []
@@ -125,36 +124,54 @@ def Virus():
                 total['virus'][i.split('\t')[0]] = i.split('\t')[1][:-3]
 
 def Cnv():    #写入CNV数据到新表 （完成）
-
     with open(cnv_file,'r') as f:
         data = f.read().splitlines()
         for i in data:
             if i.split(',')[0] in total['cnv']:
                 total['cnv'][i.split(',')[0]][ffpe_id] = i.split(',')[1]
 
-location = '/haplox/rawout/210505_A00250_0019_AHVYCTDSXY/S020_SZ20210502016WHB-0_cfdna_BK2101-680_54332'
-sample_id = location.split('/')[-1]
-ffpe_id = location.split('_')[-1]
-for i in os.listdir(location):
-    if 'gdna' in i and 'bai' in i:
-        gdna_id = i.split('_')[-2]
-    if 'indel_MrBam.txt' in i:
-        indel_file = location + '/' + i
-    if 'snv_MrBam.txt' in i:
-        snv_file = location + '/' + i
-os.system('curl 192.168.1.10/api/report/sample-csv?gdna_data_id={S1} > sample-{S2}.csv'.format(S1=gdna_id,S2=ffpe_id))
-before_file = 'sample-{S2}.csv'.format(S2=ffpe_id)
-cnv_file = location + '/cnv/{S1}_rg_cnv.genes188in680.csv'.format(S1=sample_id)
-virus_file = location + '/virus/virus_tumor_normal_result.txt'
-fusion_file = location + '/fusionscan/{S1}_fusion.csv'.format(S1=sample_id)
+def get_cnv():
+    for i in os.listdir('/x01_haplox/hapreports/0.上机信息汇总/'):
+        if '_share.xlsx' in i:
+            info_sheet = '/x01_haplox/hapreports/0.上机信息汇总/' + i
+    df = pd.read_excel(info_sheet)
+    base_list = []
+    id_list = []
+    cnv_list = [cnv_file]
+    with open(before_file) as f:
+        data = f.readlines()
+        for i in data:
+            id_list.append(i.split(',')[0])
+        id_list = id_list[1:]
+    for i in df['建库信息'].tolist():
+        if isinstance(i,float) == False and '_' in i:
+            if i.split('_')[-1] in id_list:
+                base_list.append([df[df.建库信息 == i].index.tolist()[0],i])
+    for i in base_list:
+        if 'cfdna' in i[1]:
+            get_dir = '/haplox/rawout/{S1}/{S2}/cnv/'.format(S1=i[0],S2=i[1])
+        else:
+            get_dir = '/haplox/rawout/{S1}/ffpedna_vs_gdna/{S2}/cnv/'.format(S1=i[0],S2=i[1])
+        for j in os.listdir(get_dir):
+            if 'genes188in680.csv' in j:
+                before_cnv_file = get_dir + j
+            elif '_rg_cnv_result.csv' in j:
+                before_cnv_file = get_dir + j
+        if before_cnv_file not in cnv_list:
+            cnv_list.append(before_cnv_file)
+    
+    df = pd.read_csv(cnv_list[0])
+    df.columns = list(map(lambda x: x + '_' + cnv_list[0].split('/')[-3].split('_')[-1],df.columns))
 
-df2 = pd.read_csv(before_file,encoding='utf-8')
+    for i in cnv_list[1:]:
+        df1 = pd.read_csv(i)
+        df1.columns = list(map(lambda x: x + '_' + i.split('/')[-3].split('_')[-1],df1.columns))
+        df = df.join(df1, how='outer')
+    df.to_csv('defense_cnv.csv',index=False)
 
-#-------------参数初始化-----------------
-total = {'snv':{},'indel':{},'cnv':{},'fusion':{},'virus':{}}
 def main():
-    pass
-    '''
+    #---------------合并扩增信息------------------------
+    get_cnv()
     #---------------合并守护信息------------------------
     df = combine_info()
 
@@ -175,5 +192,27 @@ def main():
     for i in total:
         for j in total[i]:
             df = df.append([total[i][j]], ignore_index=True)
-    df.to_csv("tzzs_data2.csv", index=False)
-    '''
+    df.to_csv("defense_var.csv", index=False)
+
+
+location = os.getcwd()
+sample_id = location.split('/')[-1]
+ffpe_id = location.split('_')[-1]
+for i in os.listdir(location):
+    if 'gdna' in i and 'bai' in i:
+        gdna_id = i.split('_')[-2]
+    if 'indel_MrBam.txt' in i:
+        indel_file = location + '/' + i
+    if 'snv_MrBam.txt' in i:
+        snv_file = location + '/' + i
+os.system('curl 192.168.1.10/api/report/sample-csv?gdna_data_id={S1} > sample-{S2}.csv'.format(S1=gdna_id,S2=ffpe_id))
+before_file = 'sample-{S2}.csv'.format(S2=ffpe_id)
+cnv_file = location + '/cnv/{S1}_rg_cnv.genes188in680.csv'.format(S1=sample_id)
+virus_file = location + '/virus/virus_tumor_normal_result.txt'
+fusion_file = location + '/fusionscan/{S1}_fusion.csv'.format(S1=sample_id)
+#-------------参数初始化-----------------
+total = {'snv':{},'indel':{},'cnv':{},'fusion':{},'virus':{}}
+
+df2 = pd.read_csv(before_file,encoding='utf-8')
+if len(df2.index) == 0 : #判断是否有连续样本
+    main()
